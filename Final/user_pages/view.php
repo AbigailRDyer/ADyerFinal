@@ -11,6 +11,8 @@
         require_once '../includes/session-start.php';
         include '../functions/addressBookFunctions.php';
         include_once '../functions/dbConn.php';
+        include '../functions/loginFunction.php';
+        
         ?>
     <center>
         <h1>Your Address Book</h1><br />
