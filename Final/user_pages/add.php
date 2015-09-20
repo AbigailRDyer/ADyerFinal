@@ -13,7 +13,26 @@
         include_once '../functions/dbConn.php';
         
         $group = getAllGroups();
+        
+        if ( isPostRequest() ) {
+            $userid = $_SESSION['currentUserID'];
+            $group = filter_input(INPUT_POST, 'address_group_id');
+            $fullname = filter_input(INPUT_POST, 'fullname');
+            $email = filter_input(INPUT_POST, 'email');
+            $address = filter_input(INPUT_POST, 'address');
+            $phone = filter_input(INPUT_POST, 'phone');
+            $website = filter_input(INPUT_POST, 'website');
+            $birthday = filter_input(INPUT_POST, 'birthday');
+            $image = uploadImage();
+            
+            $errors = array();
+            
+            justNumbersPhone($phone);
+            var_dump($phone);
+            var_dump(userid);
+        }
         ?>
+        
     <center>
         <h1>Add New Entry</h1><br />
 
