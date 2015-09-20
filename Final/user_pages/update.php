@@ -13,11 +13,13 @@
         include_once '../functions/dbConn.php';
         include '../functions/until.php';
         include '../functions/loginFunction.php';
-        
+
+        $addressid = filter_input(INPUT_GET, 'id');
+
         $group = getAllGroups();
-        
-        if ( isPostRequest() ) {
-            $userid = $_SESSION['currentUserID'];
+        $contactInfo = read($addressid);
+
+        if (isPostRequest()) {
             $group = filter_input(INPUT_POST, 'address_group_id');
             $fullname = filter_input(INPUT_POST, 'fullname');
             $email = filter_input(INPUT_POST, 'email');
@@ -26,33 +28,32 @@
             $website = filter_input(INPUT_POST, 'website');
             $birthday = filter_input(INPUT_POST, 'birthday');
             $image = uploadImage();
-            
+
             $errors = array();
-            
+
             $phone = justNumbersPhone($phoneEntry);
-            
-            if(!validPhone($phone))
-            {
+
+            if (!validPhone($phone)) {
                 $errors[] = 'Phone is not valid';
             }
-            
-            if(false === $image) {
+
+            if (false === $image) {
                 $errors[] = 'image could not be uploaded';
             }
-            
-            if(count($errors) == 0) {
-                if(addEntry($userid, $group, $fullname, $email, $address, $phone, $website, $birthday, $image)){
-                $results = 'New entry was successfully added to your address book';
+
+            if (count($errors) == 0) {
+                if (update($addressid, $group, $fullname, $email, $address, $phone, $website, $birthday, $image)) {
+                    $results = 'Contact was successfully updated';
                 } else {
-                    $results = 'New entry was not added, try again';
+                    $results = 'Contact was NOT updated';
                 }
             }
         }
         ?>
-        
+
     <center>
         <div class="text-success">
-            <h1>Add New Entry</h1><br /></div>
+            <h1>Update Contact</h1><br /></div>
 
         <?php if (isset($errors) && count($errors) > 0) : ?>
             <ul>
@@ -61,7 +62,7 @@
                 <?php endforeach; ?>
             </ul>
         <?php endif; ?>
-        
+
         <form method="post" action="#" enctype="multipart/form-data">
             Group:
             <select name="address_group_id" required>
@@ -71,28 +72,29 @@
                     </option>
                 <?php endforeach; ?>
             </select><br /><br /><div class="form-group">  
-                Full Name: <br /><input type="text" name="fullname" value="" required/> 
+                Full Name: <br /><input type="text" name="fullname" value="<?php echo $contactInfo['fullname']; ?>" required/> 
                 <br /> 
-                Email: <br /><input type="text" name="email" value="" required/>
+                Email: <br /><input type="text" name="email" value="<?php echo $contactInfo['email']; ?>" required/>
                 <br /> 
-                Address: <br /><input type="text" name="address" value="" required/> 
+                Address: <br /><input type="text" name="address" value="<?php echo $contactInfo['address']; ?>" required/> 
                 <br /> 
-                Phone: <br /><input type="text" name="phone" value="" required/> 
+                Phone: <br /><input type="text" name="phone" value="<?php echo $contactInfo['phone']; ?>" required/> 
                 <br /> 
-                Website: <br /><input type="text" name="website" placeholder="http://" value=""/>
+                Website: <br /><input type="text" name="website" placeholder="http://" value="<?php echo $contactInfo['website']; ?>"/>
                 <br /> 
                 Birthday: <br /><input type="date" name="birthday" value="" required/>
                 <br /><br />
                 <label>Image Upload: </label>
                 <input name="upfile" type="file">
             </div><br/>
-            <input class="btn btn-success" type="submit" value="Submit" />
+            <input class="btn btn-success" type="submit" value="Update" />
         </form><br />
-        
+
         <?php include '../includes/results.html.php'; ?>
-        
+
         <br /><br />
         <button class="btn btn-sm" onClick="location.href = '../includes/userlinks.php'">Back</button><br /><br />
     </center>
-    </body>
+    ?>
+</body>
 </html>

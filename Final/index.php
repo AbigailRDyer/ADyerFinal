@@ -14,7 +14,9 @@
         require_once 'includes/session-start.php';
         ?>
     <center>
-        <h1>Address Book</h1><br />
+        <div class="text-success">
+            <h1>Address Book</h1></div>
+        <h4>Your online contact organization buddy!</h4><br /><br />
 
         <?php
         if (isPostRequest()) {
@@ -31,7 +33,7 @@
             ?> <br /><br /> <?php
         } else {
             include 'includes/loginform.html.php'; ?>
-            <button class="btn btn-sm" onClick="location.href = 'createlogin.php'">Sign Up</button>
+            <button class="btn btn-sm" onClick="location.href = 'createlogin.php'">Sign Up</button><br />It's easy and free!
             <?php
         }
         ?>

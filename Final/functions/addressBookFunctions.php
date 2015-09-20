@@ -33,6 +33,37 @@ function read($addressid) {
     }
 }
 
+function delete($addressid) {
+    $db = getDatabase();
+    $stmt = $db->prepare("DELETE FROM address WHERE address_id = :address_id");
+    $binds = array(":address_id" => $addressid);
+    if ($stmt->execute($binds)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function update($addressid, $group, $fullname, $email, $address, $phone, $website, $birthday, $image) {
+    $db = getDatabase();
+    $stmt = $db->prepare("UPDATE address SET address_group_id = :address_group_id, fullname = :fullname, email = :email, address = :address, phone = :phone, website = :website, birthday = :birthday, image = :image WHERE address_id = :address_id");
+    $binds = array(
+        ":address_id" => $addressid,
+        ":address_group_id" => $group,
+        ":fullname" => $fullname,
+        ":email" => $email,
+        ":address" => $address,
+        ":phone" => $phone,
+        ":website" => $website,
+        ":birthday" => $birthday,
+        ":image" => $image);
+    if ($stmt->execute($binds) && $stmt->rowCount() > 0) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 function getAllGroups() {
     $db = getDatabase();
     $stmt = $db->prepare("SELECT * FROM address_groups");

@@ -15,14 +15,19 @@
         
         ?>
     <center>
-        <h1>Your Address Book</h1><br />
-        <button class="btn btn-success" onClick="location.href = 'add.php'">Add New Entry</button>
+        <div class="text-success">
+            <h1>Your Address Book</h1><br /></div>
+        <button class="btn btn-success" onClick="location.href = 'add.php'">Add New Contact</button>
         <br /><br />
 
         <?php
         $id = $_SESSION['currentUserID'];
         $results = getAllPerUser($id);
-        ?>
+        
+        if ($results == NULL){
+            echo "You have no contacts to display!";
+        }
+        else { ?>
         <table class="table">
             <thead>
                 <tr>
@@ -30,17 +35,13 @@
                     <th>Actions</th>
                 </tr>
             </thead>
-        <?php 
-        if ($results == NULL){
-            echo "You have no contacts to display!";
-        }
-        else {
-        foreach ($results as $row): ?>
+        
+        <?php foreach ($results as $row): ?>
                 <tr>
                     <td><?php echo $row['fullname']; ?></td>
                     <td><a href="read.php?id=<?php echo $row['address_id']; ?>">Read</a></td> 
                     <td><a href="update.php?id=<?php echo $row['address_id']; ?>">Update</a></td>            
-                    <td><a href="delete.php?id=<?php echo $row['address_id']; ?>">Delete</a></td>            
+                    <td><a href="delete.php?id=<?php echo $row['address_id']; ?>" onclick="return confirm('Are you sure you want to delete <?php echo $results['fullname']; ?> ?')">Delete</a></td>            
                 </tr>
             <?php endforeach; ?>
         </table>
