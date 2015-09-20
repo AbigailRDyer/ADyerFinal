@@ -11,6 +11,7 @@
         include_once 'functions/dbConn.php';
         include_once 'functions/loginFunction.php';
         include_once 'functions/until.php';
+        require_once 'includes/session-start.php';
         ?>
     <center>
         <h1>Address Book</h1><br />

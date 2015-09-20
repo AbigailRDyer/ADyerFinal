@@ -12,14 +12,24 @@
  * image
  */
 
-function getAllPerUser() {
-    $id = $_SESSION['currentUserID'];
+function getAllPerUser($id) {
     $db = getDatabase();
-    $stmt = $db->prepare("SELECT * FROM address WHERE user_id = :user_id");
-    $results = array(":id" => $id);
-    if ($stmt->execute() && $stmt->rowCount() > 0) {
+    $stmt = $db->prepare("SELECT * FROM address WHERE user_id = :user_id ORDER BY fullname ASC");
+    $binds = array(":user_id" => $id);
+    if ($stmt->execute($binds) && $stmt->rowCount() > 0) {
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return true;
+        return $results;
+    }
+}
+
+function read($addressid) {
+    $db = getDatabase();
+    $stmt = $db->prepare("SELECT * FROM address WHERE address_id = :address_id");
+    $binds = array(":address_id" => $addressid);
+    $results = array();
+    if ($stmt->execute($binds) && $stmt->rowCount() > 0) {
+        $results = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $results;
     }
 }
 
@@ -40,7 +50,6 @@ function justNumbersPhone($phone) {
 }
 
 function validPhone($phone) {
-    $phone = stripDownPhone($phone);
     if ($phone > 1000000000 && $phone < 9999999999) {
         return true;
     } else {
@@ -48,9 +57,8 @@ function validPhone($phone) {
     }
 }
 
-function addEntry($userid, $group, $fullname, $email, $address, $phone, $website, $birthday, $image)
-{
-    $db = dbconnect();
+function addEntry($userid, $group, $fullname, $email, $address, $phone, $website, $birthday, $image) {
+    $db = getDatabase();
     $stmt = $db->prepare("INSERT INTO address SET user_id = :user_id, address_group_id = :address_group_id, fullname = :fullname, email = :email, address = :address, phone = :phone, website = :website, birthday = :birthday, image = :image ");
     $binds = array(
         ":user_id" => $userid,
@@ -69,13 +77,13 @@ function addEntry($userid, $group, $fullname, $email, $address, $phone, $website
 }
 
 function uploadImage() {
-    
+
     $imageName = "";
-    
+
     try {
         // Undefined | Multiple Files | $_FILES Corruption Attack
         // If this request falls under any of them, treat it invalid.
-        if ( !isset($_FILES['upfile']['error']) || is_array($_FILES['upfile']['error']) ) {       
+        if (!isset($_FILES['upfile']['error']) || is_array($_FILES['upfile']['error'])) {
             throw new RuntimeException('Invalid parameters.');
         }
         // Check $_FILES['upfile']['error'] value.
@@ -90,7 +98,7 @@ function uploadImage() {
             default:
                 throw new RuntimeException('Unknown errors.');
         }
-        // You should also check filesize here. 
+        // You should also check filesize here.
         if ($_FILES['upfile']['size'] > 1000000) {
             throw new RuntimeException('Exceeded filesize limit.');
         }
@@ -98,31 +106,27 @@ function uploadImage() {
         // Check MIME Type by yourself.
         $finfo = new finfo(FILEINFO_MIME_TYPE);
         $validExts = array(
-                        'jpg' => 'image/jpg',
-                        'jpeg' => 'image/jpeg',
-                        'png' => 'image/png',
-                        'gif' => 'image/gif',
-                    );    
-        $ext = array_search( $finfo->file($_FILES['upfile']['tmp_name']), $validExts, true );
-        if ( false === $ext ) {
+            'jpeg' => 'image/jpeg',
+            'png' => 'image/png',
+            'gif' => 'image/gif',
+        );
+        $ext = array_search($finfo->file($_FILES['upfile']['tmp_name']), $validExts, true);
+        if (false === $ext) {
             throw new RuntimeException('Invalid file format.');
         }
         // You should name it uniquely.
         // DO NOT USE $_FILES['upfile']['name'] WITHOUT ANY VALIDATION !!
         // On this example, obtain safe unique name from its binary data.
-        $fileName =  sha1_file($_FILES['upfile']['tmp_name']); 
-        $location = sprintf('../../images/%s.%s', $fileName, $ext); 
-        if ( !move_uploaded_file( $_FILES['upfile']['tmp_name'], $location) ) {
-            throw new RuntimeException('Failed to move uploaded file.'); 
+        $fileName = sha1_file($_FILES['upfile']['tmp_name']);
+        $location = sprintf('../images/%s.%s', $fileName, $ext);
+        if (!move_uploaded_file($_FILES['upfile']['tmp_name'], $location)) {
+            throw new RuntimeException('Failed to move uploaded file.');
         }
         /* File is uploaded successfully. */
         $imageName = $fileName . '.' . $ext;
-        
     } catch (RuntimeException $e) {
         /* There was an error */
-        
     }
-    
-    return $imageName;    
-    
+
+    return $imageName;
 }

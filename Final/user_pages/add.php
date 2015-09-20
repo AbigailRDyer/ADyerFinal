@@ -11,6 +11,8 @@
         require_once '../includes/session-start.php';
         include '../functions/addressBookFunctions.php';
         include_once '../functions/dbConn.php';
+        include '../functions/until.php';
+        include '../functions/loginFunction.php';
         
         $group = getAllGroups();
         
@@ -20,22 +22,45 @@
             $fullname = filter_input(INPUT_POST, 'fullname');
             $email = filter_input(INPUT_POST, 'email');
             $address = filter_input(INPUT_POST, 'address');
-            $phone = filter_input(INPUT_POST, 'phone');
+            $phoneEntry = filter_input(INPUT_POST, 'phone');
             $website = filter_input(INPUT_POST, 'website');
             $birthday = filter_input(INPUT_POST, 'birthday');
             $image = uploadImage();
             
             $errors = array();
             
-            justNumbersPhone($phone);
-            var_dump($phone);
-            var_dump(userid);
+            $phone = justNumbersPhone($phoneEntry);
+            
+            if(!validPhone($phone))
+            {
+                $errors[] = 'Phone is not valid';
+            }
+            
+            if(false === $image) {
+                $errors[] = 'image could not be uploaded';
+            }
+            
+            if(count($errors) == 0) {
+                if(addEntry($userid, $group, $fullname, $email, $address, $phone, $website, $birthday, $image)){
+                $results = 'New entry was successfully added to your address book';
+                } else {
+                    $results = 'New entry was not added, try again';
+                }
+            }
         }
         ?>
         
     <center>
         <h1>Add New Entry</h1><br />
 
+        <?php if (isset($errors) && count($errors) > 0) : ?>
+            <ul>
+                <?php foreach ($errors as $error): ?>
+                    <li><?php echo $error; ?></li>
+                <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
+        
         <form method="post" action="#" enctype="multipart/form-data">
             Group:
             <select name="address_group_id" required>
@@ -63,8 +88,10 @@
             <input class="btn btn-success" type="submit" value="Submit" />
         </form><br />
         
+        <?php include '../includes/results.html.php'; ?>
+        
         <br /><br />
-        <button class="btn btn-sm" onClick="location.href = '../includes/userlinks.php'">Back</button>
+        <button class="btn btn-sm" onClick="location.href = '../includes/userlinks.php'">Back</button><br /><br />
     </center>
     </body>
 </html>

@@ -20,10 +20,22 @@
         <br /><br />
 
         <?php
-        $results = getAllPerUser();
+        $id = $_SESSION['currentUserID'];
+        $results = getAllPerUser($id);
         ?>
         <table class="table">
-        <?php foreach ($results as $row): ?>
+            <thead>
+                <tr>
+                    <th>Full Name</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+        <?php 
+        if ($results == NULL){
+            echo "You have no contacts to display!";
+        }
+        else {
+        foreach ($results as $row): ?>
                 <tr>
                     <td><?php echo $row['fullname']; ?></td>
                     <td><a href="read.php?id=<?php echo $row['address_id']; ?>">Read</a></td> 
@@ -32,8 +44,8 @@
                 </tr>
             <?php endforeach; ?>
         </table>
-
-        <button class="btn btn-sm" onClick="location.href = '../includes/userlinks.php'">Back</button>
+<?php } ?>
+        <br /><br /><button class="btn btn-sm" onClick="location.href = '../includes/userlinks.php'">Back</button>
     </center>
 </body>
 </html>
