@@ -13,17 +13,18 @@
         include_once '../functions/dbConn.php';
         include '../functions/loginFunction.php';
         
+        $id = $_SESSION['currentUserID'];
+        $results = getAllPerUser($id);
         ?>
     <center>
         <div class="text-success">
             <h1>Your Address Book</h1><br /></div>
-        <button class="btn btn-success" onClick="location.href = 'add.php'">Add New Contact</button>
+        
+        <?php include '../includes/sortresults.php' ?>
+        
         <br /><br />
 
         <?php
-        $id = $_SESSION['currentUserID'];
-        $results = getAllPerUser($id);
-        
         if ($results == NULL){
             echo "You have no contacts to display!";
         }
@@ -46,7 +47,9 @@
             <?php endforeach; ?>
         </table>
 <?php } ?>
-        <br /><br /><button class="btn btn-sm" onClick="location.href = '../includes/userlinks.php'">Back</button>
+        <br /><br />
+        <button class="btn btn-success" onClick="location.href = 'add.php'">Add New Contact</button><br /><br />
+        <button class="btn btn-sm" onClick="location.href = '../includes/userlinks.php'">Back</button>
     </center>
 </body>
 </html>

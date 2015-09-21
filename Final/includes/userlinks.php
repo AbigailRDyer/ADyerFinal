@@ -9,6 +9,10 @@
     <body>
         <?php
         require_once '../includes/session-start.php';
+        include '../functions/addressBookFunctions.php';
+        include_once '../functions/dbConn.php';
+        include '../functions/until.php';
+        include '../functions/loginFunction.php';
         ?>
     <center>
         <div class="text-success">
