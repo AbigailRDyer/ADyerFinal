@@ -27,7 +27,6 @@
             $phoneEntry = filter_input(INPUT_POST, 'phone');
             $website = filter_input(INPUT_POST, 'website');
             $birthday = filter_input(INPUT_POST, 'birthday');
-            $image = uploadImage();
 
             $errors = array();
 
@@ -37,15 +36,15 @@
                 $errors[] = 'Phone is not valid';
             }
 
-            if (false === $image) {
-                $errors[] = 'image could not be uploaded';
-            }
-
             if (count($errors) == 0) {
-                if (update($addressid, $group, $fullname, $email, $address, $phone, $website, $birthday, $image)) {
+                $image = uploadImage();
+                if ($image == NULL) {
+                    updateNoImage($addressid, $group, $fullname, $email, $address, $phone, $website, $birthday);
+                    $results = 'Contact was successfully updated without the image';
+                } 
+                else {
+                    update($addressid, $group, $fullname, $email, $address, $phone, $website, $birthday, $image);
                     $results = 'Contact was successfully updated';
-                } else {
-                    $results = 'Contact was NOT updated';
                 }
             }
         }

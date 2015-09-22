@@ -63,6 +63,24 @@ function update($addressid, $group, $fullname, $email, $address, $phone, $websit
         return false;
     }
 }
+function updateNoImage($addressid, $group, $fullname, $email, $address, $phone, $website, $birthday) {
+    $db = getDatabase();
+    $stmt = $db->prepare("UPDATE address SET address_group_id = :address_group_id, fullname = :fullname, email = :email, address = :address, phone = :phone, website = :website, birthday = :birthday WHERE address_id = :address_id");
+    $binds = array(
+        ":address_id" => $addressid,
+        ":address_group_id" => $group,
+        ":fullname" => $fullname,
+        ":email" => $email,
+        ":address" => $address,
+        ":phone" => $phone,
+        ":website" => $website,
+        ":birthday" => $birthday);
+    if ($stmt->execute($binds) && $stmt->rowCount() > 0) {
+        return true;
+    } else {
+        return false;
+    }
+}
 
 function getAllGroups() {
     $db = getDatabase();

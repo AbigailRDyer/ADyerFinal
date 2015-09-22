@@ -25,7 +25,6 @@
             $phoneEntry = filter_input(INPUT_POST, 'phone');
             $website = filter_input(INPUT_POST, 'website');
             $birthday = filter_input(INPUT_POST, 'birthday');
-            $image = uploadImage();
             
             $errors = array();
             
@@ -36,11 +35,11 @@
                 $errors[] = 'Phone is not valid';
             }
             
-            if(false === $image) {
+            if(count($errors) == 0) {
+            $image = uploadImage();
+            if (empty($image)) {
                 $errors[] = 'image could not be uploaded';
             }
-            
-            if(count($errors) == 0) {
                 if(addEntry($userid, $group, $fullname, $email, $address, $phone, $website, $birthday, $image)){
                 $results = 'New entry was successfully added to your address book';
                 } else {
@@ -79,7 +78,7 @@
                 <br /> 
                 Phone: <br /><input type="text" name="phone" value="" required/> 
                 <br /> 
-                Website: <br /><input type="text" name="website" placeholder="http://" value=""/>
+                Website: <br /><input type="text" name="website" value="http://"/>
                 <br /> 
                 Birthday: <br /><input type="date" name="birthday" value="" required/>
                 <br /><br />

@@ -12,9 +12,18 @@
         include '../functions/addressBookFunctions.php';
         include_once '../functions/dbConn.php';
         include '../functions/loginFunction.php';
+        include '../functions/until.php';
+        include '../functions/searchFunctions.php';
         
         $id = $_SESSION['currentUserID'];
         $results = getAllPerUser($id);
+        
+        if ( isPostRequest() ) {
+            $addressGroupSort = filter_input(INPUT_POST, 'addressGroupSort');
+            $searchText = filter_input(INPUT_POST, 'searchtext');
+            
+            $results = sortSearch($addressGroupSort, $searchText, $id);
+        }
         ?>
     <center>
         <div class="text-success">
