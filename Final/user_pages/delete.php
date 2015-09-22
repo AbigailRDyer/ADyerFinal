@@ -13,12 +13,16 @@
         include_once '../functions/dbConn.php';
         include '../functions/until.php';
         include '../functions/loginFunction.php';
-
+        
+//prior to this page, the user is prompted with a message box if they are sure they want to delete the selected entry        
+//pulls the address_id from the selected entry on view page
         $addressid = filter_input(INPUT_GET, 'id');
 
+//uses delete function which returns a bool
         $isDeleted = delete($addressid);
         $results = "";
-
+        
+//notifies the user if the contact was deleted
         if (!$isDeleted) {
             $results = "Contact was NOT deleted";
         } else {

@@ -1,9 +1,12 @@
 <center>
     <?php
     if (isPostRequest()) {
+        
+//pull from the entered email and password
         $email = filter_input(INPUT_POST, 'email');
         $password = filter_input(INPUT_POST, 'password');
         if (isValidPassword($password)) {
+//checks if the password is 4 or more character, then creates the user
             createUser($email, $password);
             if (createUser($email, $password)) {
                 ?>

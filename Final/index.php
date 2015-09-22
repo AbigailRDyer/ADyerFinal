@@ -20,8 +20,12 @@
 
         <?php
         if (isPostRequest()) {
+            
+//when user clicks submit on the login it pulls the email and password entered
             $email = filter_input(INPUT_POST, 'email');
             $password = filter_input(INPUT_POST, 'password');
+            
+//checks if entered login is a valid user
             if (isValidUser($email, $password)) {
                 $_SESSION['isValidUser'] = true;
             } else {
@@ -29,9 +33,13 @@
             }
         }
         if (isset($_SESSION['isValidUser']) && $_SESSION['isValidUser'] === true) {
+            
+//checks that the session variables are set and redirects the user to the userlinks
             header('Location: includes/userlinks.php');
             ?> <br /><br /> <?php
         } else {
+            
+//if the session variables are not yet set, the login form and create login are displayed
             include 'includes/loginform.html.php'; ?>
             <button class="btn btn-sm" onClick="location.href = 'createlogin.php'">Sign Up</button><br />It's easy and free!
             <?php

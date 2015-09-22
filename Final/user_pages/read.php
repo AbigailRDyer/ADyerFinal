@@ -14,8 +14,10 @@
         include '../functions/until.php';
         include '../functions/loginFunction.php';
 
+//pulls the address_id from the view page
         $addressid = filter_input(INPUT_GET, 'id');
 
+//with the address_id, grabs the other data for that entry        
         $results = read($addressid);
         ?>
 

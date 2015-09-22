@@ -17,7 +17,7 @@
     <center>
         <div class="text-success">
             <h1>Welcome Back</h1><br /></div>
-        <button class="btn btn-default" onClick="location.href = '../user_pages/view.php'">View Your Address Book</button>
+        <button class="btn btn-success" onClick="location.href = '../user_pages/view.php'">View Your Address Book</button>
         <button class="btn btn-default" onClick="location.href = '../user_pages/add.php'">Add New Contact</button>
         <br /><br />
         <a href="../includes/logout.php">Logout</a>

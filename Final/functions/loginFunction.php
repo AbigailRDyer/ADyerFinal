@@ -5,6 +5,8 @@
  * email
  * password
  */
+
+//function to check if the entered username is valid
 function isValidUser($email, $password) {
     $db = getDatabase();
     $id = array();
@@ -21,6 +23,8 @@ function isValidUser($email, $password) {
     }
     return false;
 }
+
+//function to create new username
 function createUser($email, $password){
     $db = getDatabase();
     $stmt = $db->prepare("INSERT INTO users SET email = :email, password = :password, created = NOW()");
@@ -36,6 +40,8 @@ function createUser($email, $password){
     }
     return true;
 }
+
+//function to check the length of new password
 function isValidPassword($password) {
     if (strlen($password) < 4) {
         return false;

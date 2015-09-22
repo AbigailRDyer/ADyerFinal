@@ -12,6 +12,7 @@
  * image
  */
 
+//function to get all address entires for that user
 function getAllPerUser($id) {
     $db = getDatabase();
     $stmt = $db->prepare("SELECT * FROM address WHERE user_id = :user_id ORDER BY fullname ASC");
@@ -22,6 +23,7 @@ function getAllPerUser($id) {
     }
 }
 
+//function to view all data for selected address
 function read($addressid) {
     $db = getDatabase();
     $stmt = $db->prepare("SELECT * FROM address WHERE address_id = :address_id");
@@ -33,6 +35,7 @@ function read($addressid) {
     }
 }
 
+//function to delete all data for selected address
 function delete($addressid) {
     $db = getDatabase();
     $stmt = $db->prepare("DELETE FROM address WHERE address_id = :address_id");
@@ -44,6 +47,7 @@ function delete($addressid) {
     }
 }
 
+//function to update data for selected address
 function update($addressid, $group, $fullname, $email, $address, $phone, $website, $birthday, $image) {
     $db = getDatabase();
     $stmt = $db->prepare("UPDATE address SET address_group_id = :address_group_id, fullname = :fullname, email = :email, address = :address, phone = :phone, website = :website, birthday = :birthday, image = :image WHERE address_id = :address_id");
@@ -63,6 +67,7 @@ function update($addressid, $group, $fullname, $email, $address, $phone, $websit
         return false;
     }
 }
+//function to update data for selected address with a blank image
 function updateNoImage($addressid, $group, $fullname, $email, $address, $phone, $website, $birthday) {
     $db = getDatabase();
     $stmt = $db->prepare("UPDATE address SET address_group_id = :address_group_id, fullname = :fullname, email = :email, address = :address, phone = :phone, website = :website, birthday = :birthday WHERE address_id = :address_id");
@@ -82,6 +87,7 @@ function updateNoImage($addressid, $group, $fullname, $email, $address, $phone, 
     }
 }
 
+//function to get all address groups
 function getAllGroups() {
     $db = getDatabase();
     $stmt = $db->prepare("SELECT * FROM address_groups");
@@ -92,12 +98,14 @@ function getAllGroups() {
     return $results;
 }
 
+//function to remove anything but numbers from phone numbers
 function justNumbersPhone($phone) {
     $phone = preg_replace("/[^0-9]/", "", $phone);
     $phone = $phone;
     return $phone;
 }
 
+//function to check for valid phone number
 function validPhone($phone) {
     if ($phone > 1000000000 && $phone < 9999999999) {
         return true;
@@ -106,6 +114,7 @@ function validPhone($phone) {
     }
 }
 
+//function to add a new contact
 function addEntry($userid, $group, $fullname, $email, $address, $phone, $website, $birthday, $image) {
     $db = getDatabase();
     $stmt = $db->prepare("INSERT INTO address SET user_id = :user_id, address_group_id = :address_group_id, fullname = :fullname, email = :email, address = :address, phone = :phone, website = :website, birthday = :birthday, image = :image ");
@@ -125,6 +134,7 @@ function addEntry($userid, $group, $fullname, $email, $address, $phone, $website
     return false;
 }
 
+//function to upload an image
 function uploadImage() {
 
     $imageName = "";

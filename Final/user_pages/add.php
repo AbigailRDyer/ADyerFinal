@@ -14,10 +14,13 @@
         include '../functions/until.php';
         include '../functions/loginFunction.php';
         
+//pulls all address groups and inserts into a variable
         $group = getAllGroups();
         
         if ( isPostRequest() ) {
             $userid = $_SESSION['currentUserID'];
+            
+//pulls the entered data from the form
             $group = filter_input(INPUT_POST, 'address_group_id');
             $fullname = filter_input(INPUT_POST, 'fullname');
             $email = filter_input(INPUT_POST, 'email');
@@ -28,19 +31,24 @@
             
             $errors = array();
             
+//uses preg_replace to remove everything other than the numbers
             $phone = justNumbersPhone($phoneEntry);
             
             if(!validPhone($phone))
             {
+//errors if phone is not valid
                 $errors[] = 'Phone is not valid';
             }
             
             if(count($errors) == 0) {
+//if there are no errors, upload the image
             $image = uploadImage();
             if (empty($image)) {
+//if the image is empty, error message
                 $errors[] = 'image could not be uploaded';
             }
                 if(addEntry($userid, $group, $fullname, $email, $address, $phone, $website, $birthday, $image)){
+//add the entry and notify the user
                 $results = 'New entry was successfully added to your address book';
                 } else {
                     $results = 'New entry was not added, try again';

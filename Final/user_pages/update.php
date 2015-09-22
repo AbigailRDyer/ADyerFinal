@@ -14,12 +14,18 @@
         include '../functions/until.php';
         include '../functions/loginFunction.php';
 
+//pulls the address_id from the view page        
         $addressid = filter_input(INPUT_GET, 'id');
 
+//pulls all address groups        
         $group = getAllGroups();
+        
+//pulls the current entry data using the address_id        
         $contactInfo = read($addressid);
 
         if (isPostRequest()) {
+            
+//grabs all of the new entered data            
             $group = filter_input(INPUT_POST, 'address_group_id');
             $fullname = filter_input(INPUT_POST, 'fullname');
             $email = filter_input(INPUT_POST, 'email');
@@ -30,13 +36,16 @@
 
             $errors = array();
 
+//removes everything but the numbers from the phone            
             $phone = justNumbersPhone($phoneEntry);
 
             if (!validPhone($phone)) {
+//validates the phone number                
                 $errors[] = 'Phone is not valid';
             }
 
             if (count($errors) == 0) {
+//uploads the image, if no image was used it doesn't replace a previously uploaded image                
                 $image = uploadImage();
                 if ($image == NULL) {
                     updateNoImage($addressid, $group, $fullname, $email, $address, $phone, $website, $birthday);
